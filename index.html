@@ -80,7 +80,7 @@
       // I had a way more complex way of storing the win confition but this method at https://dev.to/bornasepic/pure-and-simple-tic-tac-toe-with-javascript-4pgn
       // has a much simpler design so i went with that. You basically just store each combination, and iterate over the conditions after every move to check 
       // if the current user has won
-      function checkForWinner(player) {
+      const checkForWinner = (player) => { // <--- Another way to create a function in javascript
         const winningCombos = [
           [0, 1, 2],
           [3, 4, 5],
