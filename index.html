@@ -1,52 +1,106 @@
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe</title>
     <style>
-      .game-board {
-        display: grid;
-        grid-template-rows: 200px 200px 200px;
-        grid-template-columns: 200px 200px 200px;
-      }
-      body {
+      /* has a # because it will be only used by one element marked with the id of "game-board" */
+      #game-board {
         display: flex;
-        justify-content: center;
+        flex-wrap: wrap;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+        border: 2px solid black;
       }
-      .box {
-        background: #444;
-        border: 1px solid #555;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #aaa;
+      /* has a # because it will be only used by many elements marked with the class of "square" */
+      .square {
+        width: 98px;
+        height: 98px;
+        border: 1px solid black;
+        font-size: 72px;
+        text-align: center;
+        line-height: 98px;
+        cursor: pointer;
+      }
+      .square:hover {
+        background-color: #f0f0f0;
       }
     </style>
   </head>
-  <script>
-    var turnCount = 0;
-    function changeSquare(id) {
-      turnCount++;
-      const elem = document.getElementById(id);
-      elem.innerHTML = turnCount % 2 == 0 ? "X" : "O";
-      document.body.style.backgroundColor = "red";
-    }
-  </script>
   <body>
-    <div>
-      <h1>Turn</h1>
+    <h1>Tic Tac Toe</h1>
+    <h2 id="turn">Turn: X</h2>
+    <p>
+      This app was actually a lot simple than I thought it would be so I also added some API calls 
+      that make the winner get a free pokemon!
+    </p>
+    <div id="game-board">
+      <div class="square" id="0"></div>
+      <div class="square" id="1"></div>
+      <div class="square" id="2"></div>
+      <div class="square" id="3"></div>
+      <div class="square" id="4"></div>
+      <div class="square" id="5"></div>
+      <div class="square" id="6"></div>
+      <div class="square" id="7"></div>
+      <div class="square" id="8"></div>
     </div>
-    <div class="game-board">
-      <button id="square_00" class="box" onclick="changeSquare('square_00')" />
-      <button id="square_01" class="box" onclick="changeSquare('square_01')" />
-      <button id="square_02" class="box" onclick="changeSquare('square_02')" />
-      <button id="square_10" class="box" onclick="changeSquare('square_10')" />
-      <button id="square_11" class="box" onclick="changeSquare('square_11')" />
-      <button id="square_12" class="box" onclick="changeSquare('square_12')" />
-      <button id="square_20" class="box" onclick="changeSquare('square_20')" />
-      <button id="square_21" class="box" onclick="changeSquare('square_21')" />
-      <button id="square_22" class="box" onclick="changeSquare('square_22')" />
-    </div>
+    <script>
+      // Start with player X
+      let currentPlayer = "X";
+
+      // Get an array of all items with 'square' as their classnames
+      const squares = document.querySelectorAll(".square");
+
+      // Iterate over all of the squares, adding an onClick listener
+      squares.forEach((square, index) => {
+        square.addEventListener("click", () => handleMove(square, index));
+      });
+
+
+      function handleMove(square, index) {
+        square.textContent = currentPlayer;
+        square.classList.add(currentPlayer);
+        if (checkForWinner(currentPlayer)) {
+
+          
+          const return_payload = fetch('https://pokeapi.co/api/v2/pokemon/1')
+            .then(response => response.json())
+            .then(data => alert(`${currentPlayer} wins!, here's a pokemon for your troubles \n\n\n${JSON.stringify(data)}`))
+            .catch(error => console.error(error));
+
+        } else if (checkForTie()) {
+          alert("It's a tie!");
+        } else {
+          currentPlayer = currentPlayer === "X" ? "O" : "X";
+          document.getElementById("turn").innerHTML = `Turn: ${currentPlayer}`;
+        }
+      }
+
+      // I had a way more complex way of storing the win confition but this method at https://dev.to/bornasepic/pure-and-simple-tic-tac-toe-with-javascript-4pgn
+      // has a much simpler design so i went with that. You basically just store each combination, and iterate over the conditions after every move to check 
+      // if the current user has won
+      function checkForWinner(player) {
+        const winningCombos = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+        ];
+        // JS array.some() returns true if any case is true in the given list
+        return winningCombos.some((combo) =>
+          combo.every((index) => squares[index].classList.contains(player))
+        );
+      }
+
+      function checkForTie() {
+        // Check if every square has been filled, if so, it is a tie
+        return [...squares].every((square) => square.classList.contains("X") || square.classList.contains("O"));
+      }
+    </script>
   </body>
 </html>
