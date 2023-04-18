@@ -1,0 +1,52 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <style>
+      .game-board {
+        display: grid;
+        grid-template-rows: 200px 200px 200px;
+        grid-template-columns: 200px 200px 200px;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+      }
+      .box {
+        background: #444;
+        border: 1px solid #555;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #aaa;
+      }
+    </style>
+  </head>
+  <script>
+    var turnCount = 0;
+    function changeSquare(id) {
+      turnCount++;
+      const elem = document.getElementById(id);
+      elem.innerHTML = turnCount % 2 == 0 ? "X" : "O";
+      document.body.style.backgroundColor = "red";
+    }
+  </script>
+  <body>
+    <div>
+      <h1>Turn</h1>
+    </div>
+    <div class="game-board">
+      <button id="square_00" class="box" onclick="changeSquare('square_00')" />
+      <button id="square_01" class="box" onclick="changeSquare('square_01')" />
+      <button id="square_02" class="box" onclick="changeSquare('square_02')" />
+      <button id="square_10" class="box" onclick="changeSquare('square_10')" />
+      <button id="square_11" class="box" onclick="changeSquare('square_11')" />
+      <button id="square_12" class="box" onclick="changeSquare('square_12')" />
+      <button id="square_20" class="box" onclick="changeSquare('square_20')" />
+      <button id="square_21" class="box" onclick="changeSquare('square_21')" />
+      <button id="square_22" class="box" onclick="changeSquare('square_22')" />
+    </div>
+  </body>
+</html>
